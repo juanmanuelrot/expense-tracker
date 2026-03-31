@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Uploads (local dev)
+uploads/receipts/*
+uploads/statements/*
+!uploads/receipts/.gitkeep
+!uploads/statements/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+.python-version
+
+# Alembic
+*.db
+
+# Docker
+docker-compose.override.yml
