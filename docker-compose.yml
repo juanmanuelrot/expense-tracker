@@ -9,6 +9,47 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expense -d expense_tracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://expense:expense@db:5432/expense_tracker
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  bot:
+    build: ./backend
+    command: ["python", "-m", "bot.main"]
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://expense:expense@db:5432/expense_tracker
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  migrations:
+    build: ./backend
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://expense:expense@db:5432/expense_tracker
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pgdata:
