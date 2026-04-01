@@ -10,5 +10,16 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  backend:
+    build: ./backend
+    env_file: .env
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql+asyncpg://expense:expense@db:5432/expense_tracker
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
 volumes:
   pgdata:
